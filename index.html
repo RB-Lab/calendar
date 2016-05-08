@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Test calendar single-page app</title>
+		<script src="js/lib/knockout-min.js"></script>
+		<script src="js/lib/localforage.min.js"></script>
+		<script src="js/day.js"></script>
+		<script src="js/calendar.js"></script>
+		<script>
+			window.onload = function(){
+				ko.applyBindings(new Calendar());
+			};
+		</script>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body data-bind="click:clickout">
+		<div id="calendar">
+			<header>
+				<a id="goLeft" data-bind="click: goLeft"></a>
+				<h1 data-bind="text: name"></h1>
+				<a id="goRight" data-bind="click: goRight"></a>
+			</header>
+			<div id="weekdays" data-bind="foreach: weekdays">
+				<div class="cell" data-bind="text: $data"></div>
+			</div>
+			<div id="grid" data-bind="foreach: grid">
+				<div class="week" data-bind="foreach: $data">
+					<div class="cell" data-bind="css: classString, click: getSchedule, clickBubble: false">
+						<span class="eventCount" data-bind="text: eventCount"></span>
+						<span class="date" data-bind="text: date"></span>
+						
+						<!-- ko if: sheduleShow -->
+						<div class="schedule" 
+							 data-bind="click: function(){return true;}, clickBubble: false">
+							<ul data-bind="foreach:schedule" class="events">
+								<li data-bind="css: details">
+									<h4 data-bind="click: $parent.toggleEventDetails">
+										<span data-bind="text: title"></span>
+										<span class="closer" data-bind="click: $parent.removeEvent, clickBubble: false">&times;</span>
+									</h4>
+									<div class="details" data-bind="text: text, css: details"></div>
+								</li>
+							</ul>
+							<textarea placeholder="ctrl + enter &ndash; add event" 
+									  data-bind="event{keyup:checkInput}, value: text, valueUpdate: 'input'"></textarea>
+						</div>
+						<!-- /ko -->
+						
+						<ul data-bind="foreach:scheduleShort" class="events">
+							<li>
+								<h4 data-bind="text: shortTitle"></h4>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
